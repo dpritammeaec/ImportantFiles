@@ -1,0 +1,113 @@
+Q1: Create table1 and table2  making PID as primary
+
+CREATE TABLE Table1 (
+    PID INT AUTO_INCREMENT PRIMARY KEY,
+    FN VARCHAR(50),
+    LN VARCHAR(50),
+    AGE INT,
+    GENDER CHAR(1),
+    NATIONALITY VARCHAR(50),
+    PassportNo VARCHAR(20)
+);
+
+CREATE TABLE Table2 (
+    PID INT AUTO_INCREMENT PRIMARY KEY,
+    FN VARCHAR(50),
+    LN VARCHAR(50),
+    EMP_ID BIGINT,
+    PAN VARCHAR(20),
+    AADHAR BIGINT,
+    MANAGER VARCHAR(50),
+    UNITS VARCHAR(50),
+    LOCATION VARCHAR(50)
+);
+
+Q2: Insert values making PID as primary.
+
+INSERT INTO Table1 (PID, FN, LN, AGE, GENDER, NATIONALITY, PassportNo)
+VALUES 
+(1, 'TestAccount01', 'LN01', 30, 'M', 'Indian', 'K1234569'),
+(2, 'TestAccount02', 'LN02', 35, 'F', 'Indian', 'K1234567'),
+(3, 'TestAccount03', 'LN03', 44, 'F', 'Indian', 'K123456777'),
+(4, 'TestAccount04', 'LN04', 32, 'F', 'Indian', 'K1234568'),
+(5, 'TestAccount05', 'LN05', 45, 'M', 'Indian', 'K1234544'),
+(6, 'TestAccount06', 'LN06', 56, 'F', 'Indian', 'K1234599'),
+(7, 'TestAccount07', 'LN07', 22, 'M', 'Indian', 'K1234599'),
+(8, 'TestAccount08', 'LN08', 35, 'M', 'Indian', 'K1234424'),
+(9, 'TestAccount09', 'LN09', 22, 'M', 'Indian', 'K1234512'),
+(10, 'TestAccount10', 'LN10', 21, 'F', 'Indian', 'K1234510');
+
+INSERT INTO Table2 (PID, FN, LN, EMP_ID, PAN, AADHAR, MANAGER, UNITS, LOCATION)
+VALUES
+(11, 'TestAccount12', 'LN12', 754655, 'APKPC23432', 99800091234, '9878', 'abc', 'Mumbai'),
+(2,  'TestAccount02', 'LN02', 546666, 'APKPC23472', 99800091266, '9833', 'hefhe', 'Chennai'),
+(3,  'TestAccount03', 'LN03', 8768767, 'APKPC23444', 99806691234, '9853', 'hdf', 'Bangalore'),
+(4,  'TestAccount04', 'LN04', 334543, 'APKPC23231', 99807891234, '9812', 'jjj', 'Mumbai'),
+(12, 'TestAccount13', 'LN13', 987776, 'APKPC23656', 99853451234, '9833', 'jhws', 'Chennai'),
+(13, 'TestAccount14', 'LN14', 663866, 'APKPC23888', 99812341234, '9080', 'jfed', 'Bangalore'),
+(7,  'TestAccount07', 'LN07', 1234321, 'APKPC23422', 99843241234, '9123', 'kded', 'Mumbai'),
+(8,  'TestAccount08', 'LN08', 4844586723, 'APKPC23498', 99812341234, '9458', 'ndj', 'Chennai'),
+(9,  'TestAccount09', 'LN09', 836637, 'APKPC23466', 99855551234, '5647', 'kpp', 'Bangalore'),
+(14, 'TestAccount20', 'LN20', 837733, 'APKPC23477', 99800096545, '8765', 'ggg', 'Bangalore');
+
+
+
+Q3: Select Passport,PID from Table1 where age in range 30 to 45
+
+SELECT PID, PassportNo from Table1 WHERE AGE >=30 and AGE <=45;  
+
+Q4: select passport ,PID from Table1 where age less than 35
+
+SELECT PID, PassportNo from Table1 WHERE AGE<35; 
+
+Q5:select Passport,PID from Table1 where passport name starts with K
+
+SELECT PassportNo,PID from Table1 WHERE PassportNo LIKE 'K%';
+
+
+Q6:Join the table and get PID, conact (FN LN) rename as Preferred name where location is Mumbai
+
+select PID, concat(FN, LN) Preferred_name from
+(
+SELECT 
+    COALESCE(t1.PID, t2.PID) AS PID,
+    COALESCE(t1.FN, t2.FN) AS FN,
+    COALESCE(t1.LN, t2.LN) AS LN,
+    t1.AGE,
+    t1.GENDER,
+    t1.NATIONALITY,
+    t1.PassportNo,
+    t2.EMP_ID,
+    t2.PAN,
+    t2.AADHAR,
+    t2.MANAGER,
+    t2.UNITS,
+    t2.LOCATION
+FROM Table1 t1
+LEFT JOIN Table2 t2 ON t1.PID = t2.PID
+
+UNION
+
+SELECT 
+    COALESCE(t1.PID, t2.PID) AS PID,
+    COALESCE(t1.FN, t2.FN) AS FN,
+    COALESCE(t1.LN, t2.LN) AS LN,
+    t1.AGE,
+    t1.GENDER,
+    t1.NATIONALITY,
+    t1.PassportNo,
+    t2.EMP_ID,
+    t2.PAN,
+    t2.AADHAR,
+    t2.MANAGER,
+    t2.UNITS,
+    t2.LOCATION
+FROM Table1 t1
+RIGHT JOIN Table2 t2 ON t1.PID = t2.PID
+) J 
+where LOCATION='MUMBAI';
+
+
+--
+
+
